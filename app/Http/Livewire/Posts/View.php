@@ -148,19 +148,19 @@ class View extends Component
     private function setQuery()
     {
         if (! empty($this->queryType) && $this->queryType === 'me') {
-            $posts = Post::withCount(['likes', 'comments'])->where('user_id', Auth::id())->with(['userLikes', 'postImages', 'user' => function ($query) {
+            $posts = Post::withCount(['likes', 'comments'])->where('user_id', Auth::id())->with(['userLikes', 'postImages','tags', 'user' => function ($query) {
                 $query->select(['id', 'name', 'username', 'profile_photo_path']);
             },
             ])->latest()->paginate(10);
         } elseif (! empty($this->queryType) && $this->queryType === 'followers') {
             $userIds = Auth::user()->followings()->pluck('follower_id');
             $userIds[] = Auth::id();
-            $posts = Post::withCount(['likes', 'comments'])->whereIn('user_id', $userIds)->with(['userLikes', 'postImages', 'user' => function ($query) {
+            $posts = Post::withCount(['likes', 'comments'])->whereIn('user_id', $userIds)->with(['userLikes', 'postImages','tags', 'user' => function ($query) {
                 $query->select(['id', 'name', 'username', 'profile_photo_path']);
             },
             ])->latest()->paginate(10);
         } else {
-            $posts = Post::withCount(['likes', 'comments'])->with(['userLikes', 'postImages', 'user' => function ($query) {
+            $posts = Post::withCount(['likes', 'comments'])->with(['userLikes', 'postImages','tags', 'user' => function ($query) {
                 $query->select(['id', 'name', 'username', 'profile_photo_path']);
             },
             ])->latest()->paginate(10);

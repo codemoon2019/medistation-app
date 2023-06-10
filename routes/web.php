@@ -28,6 +28,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     })->name('home');
 
     Route::resource('/posts', "App\Http\Controllers\PostController")->names('posts');
+    Route::get('/post/edit/{id}', "App\Http\Controllers\PostController@getPost")->name('post.edit');
+    Route::get('/delete/image/{id}', "App\Http\Controllers\PostController@deleteImage")->name('delete.image');
+    Route::post('/post/save', "App\Http\Controllers\PostController@update")->name('post.save');
     Route::get('/feeds', "App\Http\Controllers\PostController@followers")->name('feeds');
     Route::resource('/manage/users', "App\Http\Controllers\UserController")->except(['create', 'show', 'store'])->names('users');
     Route::get('/{username}', "App\Http\Controllers\ProfileController@show")->name('profile');

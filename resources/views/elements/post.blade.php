@@ -4,16 +4,16 @@
                     <div class="h-full w-full  mb-3 filter" wire:offline.class="grayscale">
                     	@foreach($post->postImages as $media)
 	                    @if($media->is_image && preg_match('/^.*\.(png|jpg|gif)$/i', $media->path))
-                        <img src="{{ url('/storage/' . $media->path) }}"
+                        <img src="{{ url($media->path) }}"
                             alt="Social" class="w-full object-scale-down md:object-cover lg:object-cover rounded-2xl" onContextMenu="return false;">
                         @elseif(!$media->is_image && preg_match('/^.*\.(mp4|3gp)$/i', $media->path))
 	                     <div class="container">
 						<video controls crossorigin playsinline oncontextmenu="return false;" controlsList="nodownload" class="rounded-lg filter" id="player_{{ $post->id }}">
 			                <!-- Video files -->
-			                <source src="{{ url('/storage/' . $media->path) }}" type="video/mp4" size="576">
+			                <source src="{{ url($media->path) }}" type="video/mp4" size="576">
 
 			                <!-- Fallback for browsers that don't support the <video> element -->
-			                <a href="{{ url('/storage/' . $media->path) }}" download>Download</a>
+			                <a href="{{ url($media->path) }}" download>Download</a>
 			            </video>
 						</div>
                         @endif
@@ -45,6 +45,21 @@
                               ></path>
                             </svg>
                           </button>
+                            <a href="/post/edit/{{ $post->id }}">
+                            <button
+                                id="delete_{{ $post->id }}"
+                                wire:click="showDeletePostModal({{ $post->id }})"
+                                class="flex float-right items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-red-600 focus:outline-none focus:shadow-outline-gray"
+                                wire:offline.class.remove="text-red-600"
+                                wire:offline.class="text-gray-400"
+                                aria-label="Delete"
+                                wire:loading.class.remove="text-red-600"
+                                wire:loading.class="bg-gray text-gray-400"
+                                wire:offline.attr="disabled"
+                            >
+                                <image src="https://cdn.icon-icons.com/icons2/841/PNG/512/flat-style-circle-edit_icon-icons.com_66939.png" style="width:20px; height:20px;"/>
+                            </button>
+                            </a>
                          @endcan
                         <div class="flex flex-wrap ">
 
@@ -52,6 +67,12 @@
                             	<a href="{{ route('profile', ['username' => $post->user->username]) }}">
                             	<img class="inline-block object-cover w-8 h-8 mr-1 text-white rounded-full shadow-sm cursor-pointer" wire:offline.class="filter grayscale" src="{{ $post->user->profile_photo_url }}" alt="{{ $post->user->name }}" />
                                 Posted by {{ '@' . $post->user->username }}
+                                @if(count($post->tags) !== 0)
+                                    with
+                                    @foreach($post->tags as $tag)
+                                        {{ $tag->uid }}
+                                    @endforeach
+                                @endif
                                 </a>
                             </div>
 

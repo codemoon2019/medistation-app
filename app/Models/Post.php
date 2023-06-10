@@ -29,6 +29,11 @@ class Post extends Model
         return $this->hasMany(Media::class);
     }
 
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);

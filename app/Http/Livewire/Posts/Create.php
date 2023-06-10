@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Posts;
 
 use App\Models\Media;
 use App\Models\Post;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Stevebauman\Location\Facades\Location;
@@ -17,6 +18,8 @@ class Create extends Component
     public $body;
 
     public $file;
+
+    public $tags;
 
     public $location;
 
@@ -68,7 +71,8 @@ class Create extends Component
 
     public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        return view('livewire.posts.create');
+        $users = User::all();
+        return view('livewire.posts.create', ['users' => $users]);
     }
 
     /**
@@ -87,10 +91,11 @@ class Create extends Component
 
         Media::create([
             'post_id' => $post->id,
-            'path' => $path,
+            'path' => '/public/storage/'.$path,
             'is_image' => $isImage,
         ]);
     }
+
 
     private function getIp(): ?string
     {
